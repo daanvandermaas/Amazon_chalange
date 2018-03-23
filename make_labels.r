@@ -1,4 +1,7 @@
 #create labels
+classes = c("haze",    "primary" ,      "agriculture" ,  "clear",   "water" ,    "habitation",    "road",    "cultivation" ,  "slash_burn",  "cloudy",    "partly_cloudy",     "conventional_mine", "bare_ground",  "artisinal_mine",   "blooming",  "selective_logging", "blow_down")
+
+
 labels = read.csv('db/train_v2.csv')
 
 labels$tags = as.character(labels$tags)
@@ -10,21 +13,20 @@ labels$classes =  lapply( labels$tags , function(x){
   
 })
 
-labels$numbers = unlist( lapply( labels$classes , function(x){
-ret = ''
+labels$numbers =  lapply( labels$classes , function(x){
+ret = c()
   for(i in 1:length(x)){
-  ret = paste(ret, which(x[i] ==  c("haze",    "primary" ,      "agriculture" ,  "clear",   "water" ,    "habitation",    "road",    "cultivation" ,  "slash_burn",  "cloudy",    "partly_cloudy",     "conventional_mine", "bare_ground",  "artisinal_mine",   "blooming",  "selective_logging", "blow_down"))    )
+  ret = c(ret, which(x[i] ==classes ))    
 }
-  return(ret)
-  
-  }))
-
-labels$classes = NULL
-
-labels$temp = as.numeric(  unlist(lapply( labels$numbers , function(x){
-sum( unlist( strsplit(x, ' ') ) ==2) > 0
-
-  })  ))
+  return( ret)
+})
 
 
-write.csv(labels, file.path('db', 'labels.csv'))
+labels$one_hot = lapply(labels$numbers, function(x){
+one_hot =rep(0, length(classes))
+one_hot[ x ] = 1
+return(one_hot)
+
+})
+
+saveRDS(labels, file.path('db', 'labels.rds'))

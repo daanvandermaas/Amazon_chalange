@@ -81,12 +81,13 @@ h_conv5 <- tf$nn$relu( tf$nn$conv2d(h_pool2, w_conv5, strides=c(1L, 1L, 1L, 1L),
 h_conv5_flat <- tf$reshape( h_conv2 , shape(-1L, (w*h)/(4^(aantal_pool)) * aantal_kanalen))
 h_fc1 <- tf$nn$relu(tf$matmul(h_conv5_flat, w_fc1) + b_fc1)
 h_fc2 <- tf$matmul(h_fc1, w_fc2) + b_fc2
-h_output <- tf$nn$softmax(h_fc2)
+h_fcout <- tf$matmul(h_fc2, w_fcout) + b_fcout
+h_output <- tf$nn$sigmoid(h_fcout)
 
 
 
 #Define cost function
-cost = tf$reduce_mean( tf$nn$softmax_cross_entropy_with_logits( logits = h_fc2, labels = tf$one_hot(labels, clas)) )
+cost = tf$reduce_mean( tf$nn$sigmoid_cross_entropy_with_logits( logits = h_fcout, labels = tf$one_hot(labels, clas)) )
 
 #Define optimizer
 train_step <- tf$train$AdamOptimizer(lrate)$minimize(cost)
