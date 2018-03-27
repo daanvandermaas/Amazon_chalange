@@ -1,4 +1,3 @@
-library(EBImage)
+library(jpeg)
 library(tensorflow)
-library(keras)
 library(data.table)
