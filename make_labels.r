@@ -29,4 +29,31 @@ return(one_hot)
 
 })
 
+#select only primary and agriculture
+labels$temp = lapply(labels$one_hot, function(x){
+  x[c(2,3)]
+  
+})
+
+labels_select = list()
+for(i in 1:nrow(labels)){
+if( (labels$temp[i][[1]][1] +  labels$temp[i][[1]][2] ) !=  0 ){
+  labels_select[[i]] = labels[i,]
+}
+}
+
+
+labels = rbindlist(labels_select)
+
+
+labels$temp = unlist( lapply(labels$temp, function(x){
+  if(x[2] == 1){
+    return(1)
+  }else{
+    return(0)
+  }
+}))
+
+
+
 saveRDS(labels, file.path('db', 'labels.rds'))
