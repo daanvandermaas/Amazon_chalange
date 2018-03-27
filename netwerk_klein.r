@@ -1,9 +1,10 @@
 source('packages.r')
 source('read_batch.r')
 
+path = "/home/daniel/R/Amazon_chalange/db"
 
 #read in file with labels and file names
-data = readRDS('db/labels.rds')
+data = readRDS( file.path( path, 'labels.rds') )
 
 #split in train and test
 split = sample(x =  c(1:nrow(data)), size = round(0.8*nrow(data)) )
